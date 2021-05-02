@@ -1,67 +1,56 @@
-/*
- * Copyright (c) 2004, Oracle and/or its affiliates. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or
- * without modification, are permitted provided that the following
- * conditions are met:
- *
- * -Redistributions of source code must retain the above copyright
- *  notice, this list of conditions and the following disclaimer.
- *
- * -Redistribution in binary form must reproduce the above copyright
- *  notice, this list of conditions and the following disclaimer in
- *  the documentation and/or other materials provided with the
- *  distribution.
- *
- * Neither the name of Oracle nor the names of
- * contributors may be used to endorse or promote products derived
- * from this software without specific prior written permission.
- *
- * This software is provided "AS IS," without a warranty of any
- * kind. ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND
- * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY
- * EXCLUDED. SUN MICROSYSTEMS, INC. ("SUN") AND ITS LICENSORS SHALL
- * NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS A RESULT OF
- * USING, MODIFYING OR DISTRIBUTING THIS SOFTWARE OR ITS
- * DERIVATIVES. IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR
- * ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT,
- * SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
- * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF
- * THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF SUN HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- * You acknowledge that Software is not designed, licensed or
- * intended for use in the design, construction, operation or
- * maintenance of any nuclear facility.
- */
 
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
+import java.io.*;
 
-public class Server implements Hello {
+public class Server implements GradeInquiry  {
 
+    private HashMap<String, Double> gradeBook = new HashMap<String, Double>();
+    
     public Server() {}
+
+    private void saveGradeBook() throws IOException, FileNotFoundException{
+        FileOutputStream fileOutputStream = new FileOutputStream("objects.ser");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(this.gradeBook);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+    }
 
     public String sayHello() {
         return "Hello, world!";
     }
 
-    public String studentGrade(String student_name){
-        return student_name;
+    public Double studentGrade(String student_name){
+        return gradeBook.get(student_name);
     }
 
-    public static void main(String args[]) {
+    public void addStudentGrade(String student_name, Double grade) throws IOException{
+        gradeBook.put(student_name, grade);
+        saveGradeBook();
+    } 
 
+    public static void main(String args[]){
         try {
             Server obj = new Server();
-            Hello stub = (Hello) UnicastRemoteObject.exportObject(obj, 0);
+            try{
+                FileInputStream fileInputStream = new FileInputStream("objects.ser");
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                HashMap<String,Double> saved_gradebook = (HashMap<String, Double>) objectInputStream.readObject();
+                obj.gradeBook = saved_gradebook;
+                objectInputStream.close();
+            } catch (ClassNotFoundException | IOException e){
+                //e.printStackTrace();
+            }
+
+            GradeInquiry stub = (GradeInquiry) UnicastRemoteObject.exportObject(obj, 0);
 
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Hello", stub);
+            registry.bind("GradeInquiry", stub);
 
             System.err.println("Server ready");
         } catch (Exception e) {
