@@ -49,6 +49,10 @@ public class Server implements Hello {
         return "Hello, world!";
     }
 
+    public String studentGrade(String student_name){
+        return student_name;
+    }
+
     public static void main(String args[]) {
 
         try {
