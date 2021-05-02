@@ -13,7 +13,7 @@ public class Server implements GradeInquiry  {
     public Server() {}
 
     private void saveGradeBook() throws IOException, FileNotFoundException{
-        FileOutputStream fileOutputStream = new FileOutputStream("objects.ser");
+        FileOutputStream fileOutputStream = new FileOutputStream("gradeBook.ser");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(this.gradeBook);
         objectOutputStream.flush();
@@ -37,7 +37,7 @@ public class Server implements GradeInquiry  {
         try {
             Server obj = new Server();
             try{
-                FileInputStream fileInputStream = new FileInputStream("objects.ser");
+                FileInputStream fileInputStream = new FileInputStream("gradeBook.ser");
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
                 HashMap<String,Double> saved_gradebook = (HashMap<String, Double>) objectInputStream.readObject();
                 obj.gradeBook = saved_gradebook;

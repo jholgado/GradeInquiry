@@ -14,18 +14,25 @@ public class Client {
             GradeInquiry stub = (GradeInquiry) registry.lookup("GradeInquiry");
             boolean run = true;
             Scanner scan = new Scanner(System.in);
-            String input;
             while(run){
-                System.out.println("Welcome to Grade Inquiry! Please select and operation:");
+                System.out.println("Welcome to Grade Inquiry! Please select an operation:");
                 System.out.println("G - get grade");
+                System.out.println("A - add grade");
                 System.out.println("Q - quit");
-                input = scan.nextLine().toUpperCase();
+                String input = scan.nextLine().toUpperCase();
                 switch(input){
                     case "G":
                         System.out.println("Please enter a student name");
-                        input = scan.nextLine();
+                        String student_name1 = scan.nextLine();
                         Double response = stub.studentGrade(input);
                         System.out.println("Grade: " + response);
+                        break;
+                    case "A":
+                        System.out.println("Please enter a student name");
+                        String student_name2 = scan.nextLine();
+                        System.out.println("Please enter a student grade");
+                        Double grade_in = scan.nextDouble();
+                        stub.addStudentGrade(student_name2, grade_in);
                         break;
                     case "Q":
                         System.out.println("exiting client");
