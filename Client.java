@@ -15,12 +15,14 @@ public class Client {
             boolean run = true;
             Scanner scan = new Scanner(System.in);
             String input;
+            //run loop; terminates if Q is selected by the user
             while(run){
                 System.out.println("Welcome to Grade Inquiry! Please select an operation:");
                 System.out.println("G - get grade");
                 System.out.println("A - add grade");
                 System.out.println("Q - quit");
                 input = scan.nextLine().toUpperCase();
+                
                 switch(input){
                     case "G":
                         System.out.println("Please enter a student name");
