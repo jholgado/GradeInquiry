@@ -37,6 +37,10 @@ public class Server implements GradeInquiry  {
         saveGradeBook();
     } 
 
+    public HashMap<String, Double> getGradeBook(){
+        return this.gradeBook;
+    }
+
     public static void main(String args[]){
         try {
             Server obj = new Server();

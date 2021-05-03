@@ -1,5 +1,6 @@
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Client {
@@ -20,6 +21,7 @@ public class Client {
                 System.out.println("Welcome to Grade Inquiry! Please select an operation:");
                 System.out.println("G - get grade");
                 System.out.println("A - add grade");
+                System.out.println("V - view gradebook");
                 System.out.println("Q - quit");
                 input = scan.nextLine().toUpperCase();
                 
@@ -37,6 +39,10 @@ public class Client {
                         Double grade_in = scan.nextDouble();
                         scan.nextLine();
                         stub.addStudentGrade(student_name2, grade_in);
+                        break;
+                    case "V":
+                        HashMap<String, Double> gradeBook = stub.getGradeBook();
+                        System.out.println(gradeBook.toString());
                         break;
                     case "Q":
                         System.out.println("exiting client");
