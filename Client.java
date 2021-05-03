@@ -33,6 +33,7 @@ public class Client {
                         String student_name2 = scan.nextLine();
                         System.out.println("Please enter a student grade");
                         Double grade_in = scan.nextDouble();
+                        scan.nextLine();
                         stub.addStudentGrade(student_name2, grade_in);
                         break;
                     case "Q":
